@@ -1,21 +1,27 @@
-![logo](src/assets/ePocket with text.png)
+# React + TypeScript + Vite
 
-# 8.-ePocket
-A smart contract that will send payments to its owner in established amounts
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-# Installation
-To install clone this repository, and run the command `npx run dev` which will set up a Vite server. Then head your browser to http://127.0.0.1:5173/   which is the localhost address to this server. 
+Currently, two official plugins are available:
 
-this will start a webapp server configured to receive and send transactions to my ePocket, which will send payments to my personal test wallet. If you want to receive money in yout wallet, you should deploy a new contract and configure to which address send payments and its amounts. This can be done by running the script:`scripts/deployWithDayAmount.js` (configuring your wallet as the owner and the amounts that you want to claim for each day). Then fund your deployed ePocket with testether: by running: `scripts/fundWithEth.js'
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-Running `scripts/deployWithDayAmount.js` will output the new contract's address, that should be pasted in src/app.tsx on line
-AQUI ME QUEDE, TERMINANDO DE DOCUMENTAR, EL VIDEO YA ESTA, SOLO SUBIR A GITHUB CON INDICACIONES E IMAGENES, ESTOY SUBIENDO LOS ARCHIVOS A GITHUB, VEREMOS SI SE SUBEN
-That is it, thanks for reading, see you around
- the app will run displaying with your ePocket contract, sending money to its owner, according to your establishedAmounts.
-follow he instructions.
-However, this will start a webapp configured to read for my personal ePocket, which will send payments to my own test wallet. In order to set up your own ePocket, you should deploy a new contract. This can be done by running the script:`scripts/deploy` (configuring your wallet as the owner and the amounts that you want to claim for each day). Then fund your deployed ePocket with testether: `scripts/fundwithEther.js'
+## Expanding the ESLint configuration
 
-The scripts/deploy.js will output the new contracts address, that should be pasted in src/app.tsx on line
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-That is it, thanks for reading, see you around
- the app will run displaying with your ePocket contract, sending money to its owner, according to your establishedAmounts.
+- Configure the top-level `parserOptions` property like this:
+
+```js
+   parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+   },
+```
+
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

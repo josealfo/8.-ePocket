@@ -127,6 +127,16 @@ function App() {
     }
   }
 
+  // Set the title and favicon
+  document.title = 'ePocket';
+  const faviconLink = document.createElement('link');
+  faviconLink.rel = 'icon';
+  faviconLink.type = 'image/png'; 
+  faviconLink.href = '/ePocketFavicon.png'; // Use the correct path and file name
+
+  // Append the favicon link to the head of the document
+  document.head.appendChild(faviconLink);
+
   return (
     <>
       <img src={ePocketLogo} className="logo" alt="ePocket logo" />

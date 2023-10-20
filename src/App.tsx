@@ -57,7 +57,8 @@ function App() {
         setBalance(bal);
         const establishedAmounts = await ePocketContract.establishedAmounts();
         setEstablishedAmouns(establishedAmounts);
-        const lastClaim = await ePocketContract.lastClaim();
+        //const lastClaim = await ePocketContract.lastClaim();
+        const lastClaim = epData.lastClaim();
         setLastClaim(lastClaim);
       } catch (error) {
         console.error("Error fetching data from Ethereum:", error);
@@ -74,7 +75,10 @@ function App() {
   console.log(`--:--:--: dayOfTheMonth is ${dayOfTheMonth}`);
 
   // Convert the lastClaim timestamp to a Date object
-  const lastClaimDate = new Date(lastClaim);  // change to ethData.lastClaim
+//  const lastClaimDate = new Date(lastClaim);  // change to ethData.lastClaim
+  // Convert the lastClaim timestamp to a Date object from ethData.lastClaim (casting it to a Number)
+  const lastClaimDate = ethData ? new Date(Number(ethData.lastClaim)) : new Date(0);
+
 
   // Compare the year, month, and day
   const alreadyClaimedToday = (

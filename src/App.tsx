@@ -34,9 +34,6 @@ interface BlockchainData {
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [ethData, setEthData] = useState<BlockchainData | null>(null);
-  const [balance, setBalance] = useState<number | null>(null);   // coment this line
-  const [establishedAmounts, setEstablishedAmouns] = useState<number[] | null>(null); //also comment
-  const [lastClaim, setLastClaim] = useState<number>(0);
 
   /* When click the claim button will execute a transaction and get the receipt */
   async function handleClaimClick() {
@@ -47,19 +44,13 @@ function App() {
     alert('Claimed! tx: ' + receipt.hash);
   }
 
+  // fetch data from Etereum, and stop the spinner, after showing ePocket logo.
   useEffect(() => {
     async function fetchData() {
       try {
+        // fetch smart contract's data from Ethereum and set it in a state object variable 
         const epData = await ePocketContract.getData();
-        setEthData(epData);
-        // comment this lines
-        const bal = await ePocketContract.getBalance();
-        setBalance(bal);
-        const establishedAmounts = await ePocketContract.establishedAmounts();
-        setEstablishedAmouns(establishedAmounts);
-        //const lastClaim = await ePocketContract.lastClaim();
-        const lastClaim = epData.lastClaim();
-        setLastClaim(lastClaim);
+        setEthData(epData);      
       } catch (error) {
         console.error("Error fetching data from Ethereum:", error);
       } finally {
@@ -74,43 +65,34 @@ function App() {
   const dayOfTheMonth = currentDate.getDate();
   console.log(`--:--:--: dayOfTheMonth is ${dayOfTheMonth}`);
 
-  // Convert the lastClaim timestamp to a Date object
-//  const lastClaimDate = new Date(lastClaim);  // change to ethData.lastClaim
   // Convert the lastClaim timestamp to a Date object from ethData.lastClaim (casting it to a Number)
   const lastClaimDate = ethData ? new Date(Number(ethData.lastClaim)) : new Date(0);
 
-
-  // Compare the year, month, and day
+  // Compare the year, month, and day of the lastClaim to see if it has already claimed for today
   const alreadyClaimedToday = (
     currentDate.getFullYear() === lastClaimDate.getFullYear() &&
     currentDate.getMonth() === lastClaimDate.getMonth() &&
     currentDate.getDate() === lastClaimDate.getDate()
   );
 
-  if (alreadyClaimedToday) {
-    console.log('The timestamp of lastClaim corresponds to the current day: already claimed today.');
-  } else {
-    console.log('The timestamp of lastClaim does not correspond to the current day: has not claimed today.');
-  }
-
   /***************** Debug logs ***********/
   const debugTimestamp = new Date();  // Get the current timestamp and format it
   const formattedTimestamp = `${debugTimestamp.getHours().toString().padStart(2, '0')}:${debugTimestamp.getMinutes().toString().padStart(2, '0')}:${debugTimestamp.getSeconds().toString().padStart(2, '0')}`;
-  
-  console.log(`${formattedTimestamp}: balance is ${balance ?? 'N/A'} (${formatEther(balance?.toString() ?? '0')} Eth)`);
-  // move here to $ethData?.lastClaim
-  console.log(`${formattedTimestamp}: establishedAmounts is ', ${establishedAmounts}`);
-  console.log(`${formattedTimestamp}: lastClaim is ', ${lastClaim}`);
   console.log(`${formattedTimestamp}: ethData.balance is ${ethData?.balance}`);
   console.log(`${formattedTimestamp}: ethData.establishedAmounts is ', ${ethData?.establishedAmounts}`);
   console.log(`${formattedTimestamp}: ethData.lastClaim is ', ${ethData?.lastClaim} and lastClaimDate is ${lastClaimDate}`);
-  console.log(`${formattedTimestamp}: ethData.lastClaim is ', ${ethData?.lastClaim}`)
 
-  // Convert Wei to Ether
-  const amountToClaimInWei: BigNumberish = ethData?.establishedAmounts[dayOfTheMonth - 1] ?? 0;
+  if (alreadyClaimedToday) {
+    console.log(`${formattedTimestamp}: The timestamp of ethData.lastClaim corresponds to the current day: already claimed today.`);
+  } else {
+    console.log(`${formattedTimestamp}: The timestamp of ethData.lastClaim does not correspond to the current day: has not claimed today.`);
+  }
+  /***************** Debug logs ***********/
+
 
   // Conditionally render a claim button or a text based on the amount to claim (and the lastClaim) 
   let claimContent;
+  const amountToClaimInWei: BigNumberish = ethData?.establishedAmounts[dayOfTheMonth - 1] ?? 0;
   if (alreadyClaimedToday) {
     claimContent = <p>You already claimed today :) Come back soon...</p>;
     console.log('The timestamp of lastClaim corresponds to the current day: already claimed today.');
@@ -127,15 +109,8 @@ function App() {
     }
   }
 
-  // Set the title and favicon
+  // Set the title (favicon changed by altering the image 'public/favicon.svg')
   document.title = 'ePocket';
-  const faviconLink = document.createElement('link');
-  faviconLink.rel = 'icon';
-  faviconLink.type = 'image/png'; 
-  faviconLink.href = '/ePocketFavicon.png'; // Use the correct path and file name
-
-  // Append the favicon link to the head of the document
-  document.head.appendChild(faviconLink);
 
   return (
     <>

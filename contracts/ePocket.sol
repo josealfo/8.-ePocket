@@ -3,7 +3,20 @@ pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-/* Montly ePocket, you can claim on the established days of month */
+/* ePocket: a Smart Contract, to help you manage your expenses.
+*
+* It has an owner and all transfers will be done to this account. This is achieved by inheriting Ownable from @openzeppelin. This owner
+* is the account that deployed the Smart Contract.
+*
+* A receive function is declared, so it can receive ether. In order to send money to its owner, it should have a balance, so ether needs to be
+* sent to the contract and will be received. This is handled natively by Ethereum. The user just need to send ether (or testEther) to this 
+* Smart Contract and its balance will be increased.
+*
+* If the owner wants to withdraw a certain amount of balance, it can be done by calling the 'withdraw' method. Besides there is no GUI for this at the 
+* moment, the method exists for future versions.
+*
+* Events are emitted on each call whenever a transfer is made.
+*/
 contract ePocket is Ownable {
     
     //public for testing, move to internal
@@ -18,9 +31,9 @@ contract ePocket is Ownable {
                                         // Be careful when setting the amount on days 29, 30 or 31; since you 
                                         // won't be able to claim every month. For example you wont be able to 
                                         // claim for day 30 in february. 
-    uint256 public lastClaim;  // timestamp of the last claim or 0 if there are no claims
+    uint256 public lastClaim;  // timestamp of the last claim or 0 if the smart contract is new and there are no claims yet
 
-    // used by getData, this struct is not used by the internal working, it is just to return an ordered pack of data 
+    // used by getData(), this struct is not used by the internal working, it is just to return an ordered pack of data in a single call
     struct Data {   
         address owner;
         uint balance;
@@ -28,18 +41,19 @@ contract ePocket is Ownable {
         uint lastClaim;
     }
 
+    // events are in past, easier to understand :)
     event Received(uint amount, address from);         // received money, certain amount from a sender
     event Transfered(uint amount);                     // always transfer to the owner
     event ClaimCalled(string day);                     // owner claimed on the given day       
     event Withdrawed(uint amount, uint timestamp);      // owner withdrawed amount on the given timestamp
 
-    // constructor should be set with an optional payable amount, and with establishedAmounts
-    // and the owner will be the EOA who deployed this contract
+    // constructor with an optional payable amount, and with establishedAmounts. As this class inherits Ownable from openzeppelin, 
+    // the owner will be the EOA who deployed this Smart Contract.
     constructor(uint[31] memory _establishedAmounts) payable {
         establishedAmounts = _establishedAmounts;
     }
     
-    // By declaring it, allows to receive money
+    // By declaring it, allows to receive money (natively implemented, just an event is emmited)
     receive() external payable {
         emit Received(msg.value, msg.sender);
     }
@@ -181,5 +195,4 @@ contract ePocket is Ownable {
         uint256 SECONDS_PER_DAY = 24 * 60 * 60;
         (,month,) = _daysToDate(timestamp / SECONDS_PER_DAY);
     }
-
 }

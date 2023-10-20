@@ -1,6 +1,10 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Smart Contract to help manage daily expenses. 
+
+'s user Interface to claim money on specific dates. 
+
+ Smart Contract his template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
 

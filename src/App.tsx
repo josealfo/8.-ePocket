@@ -21,6 +21,21 @@ const provider = new JsonRpcProvider(url);
 const wallet = new ethers.Wallet(APEX_PRIVATE_KEY, provider);
 const abi = EPocketABI;
 const ePocketContract = new ethers.Contract(ePocketAddress, abi, wallet);
+/** 
+ * This is the main file of the typescript app. Shows 'ePocket' title and calls the Ethereum blockchain to fetch smart contract's data.
+ *  This happens while the spinner is loading, and then the data is stored in 'ethData' state variable, when Ethereum returns, using Ethers.
+ * 'ethData' will contain the array with the 'establishedAmounts' (with 18 digis hexadecimal). This 'establishedAmounts' will repeat for every
+ * month, even when it has 30, 31, 28 or 29 days.
+ * 
+ * Using this 'establishedAmounts' array that we get from the Smart Contract through ethers, we render a react-calendar Calendar and fill
+ * ir with the info, setting an event for every day of the month with the amount allowed to claim. As I said, these amounts will be in hexadecimal 
+ * weis, so we use ethers to display values in eth.
+ * 
+ * Right now, this app is set up to read a sepolia Smart Contract heading to its owner, my wallet. If you want it to redirect it to your personal wallet,
+ * you must deploy a new contract, and the deployer will be the new owner, receiving all payments. Then fund it with testEth (from a faucet) so that it has 
+ * a positive balance. A script for doing these tasks are provided in 'scripts/deployWithDayAmounts.js' and 'fundWithEth.js'. Read the README.md for instructions
+ * on how to download and install.
+ */
 
 // Solidity struct containing data about the smart contract, returned by it
 interface BlockchainData {

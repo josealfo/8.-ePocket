@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
-import ePocketLogo from './assets/ePocket with text.png';
-import './App.css';
-import EPocketABI from './EPocketABI.json';
-import { JsonRpcProvider } from 'ethers';
 import { ethers } from 'ethers';
 import { formatEther } from 'ethers';
+import { BigNumberish } from 'ethers';
+import { JsonRpcProvider } from 'ethers';
+import ePocketLogo from './assets/ePocket with text.png';
+import EPocketABI from './EPocketABI.json';
 import { EPocketCalendar } from './EPocketCalendar';
 import { PulseLoader } from "react-spinners";
-import { BigNumberish } from 'ethers';
+import './App.css';
 
-/* The Contract must have a balance, and also wallet has to be the owner */
-//const previousEPocketAddress = '0x527e127BcA88e133512798217efC505007D47Cad';
-const ePocketAddress = '0x37c45b77f7456affe79432D4a64dcCC752667Fbb';
+/* Modify this variable with your own ePocket address (has to be a deployed contract, scripts to deploy are provided in  scripts/ */
+/* (Remember: to sendd ether, the Contract must have a balance > 0, and wallet address has to be the owner, the one who deployed) */
+const ePocketAddress = '0x37c45b77f7456affe79432D4a64dcCC752667Fbb';  // <-- Put your ePocket address here
+
+
+// Connection to Ethereum
 const APEX_PRIVATE_KEY = '0x5a574047a789fdc82091c649346c711cf539417d966e2dce501362dd77bf6e18';
 const url = 'https://eth-sepolia.g.alchemy.com/v2/VAwg_ZetOtVJwNdOvLMR2cY20G6LW8Yj';
 const provider = new JsonRpcProvider(url);
@@ -19,6 +22,7 @@ const wallet = new ethers.Wallet(APEX_PRIVATE_KEY, provider);
 const abi = EPocketABI;
 const ePocketContract = new ethers.Contract(ePocketAddress, abi, wallet);
 
+// Solidity struct containing data about the smart contract, returned by it
 interface BlockchainData {
   owner: string;
   balance: number;
@@ -26,13 +30,15 @@ interface BlockchainData {
   lastClaim: number;
 }
 
+/* Main Component of the App, Will display the Title, Claim button, Calendar, and info (like owner address, balance, etc)*/
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [ethData, setEthData] = useState<BlockchainData | null>(null);
-  const [balance, setBalance] = useState<number | null>(null);
-  const [establishedAmounts, setEstablishedAmouns] = useState<number[] | null>(null);
+  const [balance, setBalance] = useState<number | null>(null);   // coment this line
+  const [establishedAmounts, setEstablishedAmouns] = useState<number[] | null>(null); //also comment
   const [lastClaim, setLastClaim] = useState<number>(0);
 
+  /* When click the claim button will execute a transaction and get the receipt */
   async function handleClaimClick() {
     setLoading(true);
     const txResponse = await ePocketContract.claim();
@@ -46,6 +52,7 @@ function App() {
       try {
         const epData = await ePocketContract.getData();
         setEthData(epData);
+        // comment this lines
         const bal = await ePocketContract.getBalance();
         setBalance(bal);
         const establishedAmounts = await ePocketContract.establishedAmounts();
@@ -67,7 +74,7 @@ function App() {
   console.log(`--:--:--: dayOfTheMonth is ${dayOfTheMonth}`);
 
   // Convert the lastClaim timestamp to a Date object
-  const lastClaimDate = new Date(lastClaim);
+  const lastClaimDate = new Date(lastClaim);  // change to ethData.lastClaim
 
   // Compare the year, month, and day
   const alreadyClaimedToday = (
@@ -87,6 +94,7 @@ function App() {
   const formattedTimestamp = `${debugTimestamp.getHours().toString().padStart(2, '0')}:${debugTimestamp.getMinutes().toString().padStart(2, '0')}:${debugTimestamp.getSeconds().toString().padStart(2, '0')}`;
   
   console.log(`${formattedTimestamp}: balance is ${balance ?? 'N/A'} (${formatEther(balance?.toString() ?? '0')} Eth)`);
+  // move here to $ethData?.lastClaim
   console.log(`${formattedTimestamp}: establishedAmounts is ', ${establishedAmounts}`);
   console.log(`${formattedTimestamp}: lastClaim is ', ${lastClaim}`);
   console.log(`${formattedTimestamp}: ethData.balance is ${ethData?.balance}`);
@@ -97,7 +105,7 @@ function App() {
   // Convert Wei to Ether
   const amountToClaimInWei: BigNumberish = ethData?.establishedAmounts[dayOfTheMonth - 1] ?? 0;
 
-  // Conditionally render the button or text based on the amount to claim
+  // Conditionally render a claim button or a text based on the amount to claim (and the lastClaim) 
   let claimContent;
   if (alreadyClaimedToday) {
     claimContent = <p>You already claimed today :) Come back soon...</p>;

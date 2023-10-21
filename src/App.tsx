@@ -9,18 +9,11 @@ import { EPocketCalendar } from './EPocketCalendar';
 import { PulseLoader } from "react-spinners";
 import './App.css';
 
+
 /* Modify this variable with your own ePocket address (has to be a deployed contract, scripts to deploy are provided in  scripts/ */
 /* (Remember: to sendd ether, the Contract must have a balance > 0, and wallet address has to be the owner, the one who deployed) */
 const ePocketAddress = '0x37c45b77f7456affe79432D4a64dcCC752667Fbb';  // <-- Put your ePocket address here
 
-
-// Connection to Ethereum
-const APEX_PRIVATE_KEY = '0x5a574047a789fdc82091c649346c711cf539417d966e2dce501362dd77bf6e18';
-const url = 'https://eth-sepolia.g.alchemy.com/v2/VAwg_ZetOtVJwNdOvLMR2cY20G6LW8Yj';
-const provider = new JsonRpcProvider(url);
-const wallet = new ethers.Wallet(APEX_PRIVATE_KEY, provider);
-const abi = EPocketABI;
-const ePocketContract = new ethers.Contract(ePocketAddress, abi, wallet);
 /** 
  * This is the main file of the typescript app. Shows 'ePocket' title and calls the Ethereum blockchain to fetch smart contract's data.
  *  This happens while the spinner is loading, and then the data is stored in 'ethData' state variable, when Ethereum returns, using Ethers.
@@ -49,6 +42,16 @@ interface BlockchainData {
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [ethData, setEthData] = useState<BlockchainData | null>(null);
+
+  // Connection to Ethereum
+  // Using vite-plugin-env (instead of dotenv)
+  const endpoint = import.meta.env.VITE_ENDPOINT_URL;
+  const privateKey = import.meta.env.VITE_PRIVATE_KEY
+  const provider = new JsonRpcProvider(endpoint);
+  const wallet = new ethers.Wallet(privateKey, provider);
+  const abi = EPocketABI;
+  const ePocketContract = new ethers.Contract(ePocketAddress, abi, wallet);
+
 
   /* When click the claim button will execute a transaction and get the receipt */
   async function handleClaimClick() {
@@ -96,6 +99,8 @@ function App() {
   console.log(`${formattedTimestamp}: ethData.balance is ${ethData?.balance}`);
   console.log(`${formattedTimestamp}: ethData.establishedAmounts is ', ${ethData?.establishedAmounts}`);
   console.log(`${formattedTimestamp}: ethData.lastClaim is ', ${ethData?.lastClaim} and lastClaimDate is ${lastClaimDate}`);
+  console.log(`${formattedTimestamp}: endPoint: is ${endpoint}`);                       //remove this line  
+  console.log(`${formattedTimestamp}: privateKey: is ${privateKey}`);                   //remove this line
 
   if (alreadyClaimedToday) {
     console.log(`${formattedTimestamp}: The timestamp of ethData.lastClaim corresponds to the current day: already claimed today.`);

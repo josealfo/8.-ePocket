@@ -1,4 +1,4 @@
-![logo](src/assets/ePocket with text.png)
+![logo](src/assets/ePocket%20with%20text.png)
 
 # 8.-ePocket
 A smart contract that will send payments to its owner in established amounts

@@ -1,10 +1,16 @@
-![logo](src/assets/ePocket%20with%20text.png)
+![Logo](src/assets/ePocket%20with%20text.png)
 
 # 8.-ePocket
-A smart contract that will send payments to its owner in established amounts
+A Smart Contract that will send payments to its owner in established amounts. It will display a calendar like this, accorrding to the Smart Contract:
+
+![Sample calendar](src/assets/ePocket%20sample%20calendar.png)
+
+and a button to claim money that will be active in the established dates.
 
 # Installation
-To install clone this repository, and run the command `npx run dev` which will set up a Vite server. Then head your browser to http://127.0.0.1:5173/   which is the localhost address to this server. 
+To install clone this repository, and install on dependencies by running `npm install`. 
+
+After running the command `npx run dev`, which will set up a Vite server; head your browser to `http://127.0.0.1:5173/`   which is the localhost address to this server. 
 
 This will start a webapp server configured to receive and send transactions to my personal ePocket (which will send money to my test wallet). However, if you want to receive payments in yout wallet, you should deploy and configure a new contract. This can be done by running the script: `scripts/deployWithDayAmount.js` (specifying your wallet as the contract's owner and the amounts that you will claim for each day of the month). Then, fund your deployed ePocket with testether, by running: `scripts/fundWithEth.js`
 

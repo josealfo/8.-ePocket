@@ -98,26 +98,17 @@ function App() {
   const formattedTimestamp = `${debugTimestamp.getHours().toString().padStart(2, '0')}:${debugTimestamp.getMinutes().toString().padStart(2, '0')}:${debugTimestamp.getSeconds().toString().padStart(2, '0')}`;
   console.log(`${formattedTimestamp}: ethData.balance is ${ethData?.balance}`);
   console.log(`${formattedTimestamp}: ethData.establishedAmounts is ', ${ethData?.establishedAmounts}`);
-  console.log(`${formattedTimestamp}: ethData.lastClaim is ', ${ethData?.lastClaim} and lastClaimDate is ${lastClaimDate}`);
-  console.log(`${formattedTimestamp}: endPoint: is ${endpoint}`);                       //remove this line  
-  console.log(`${formattedTimestamp}: privateKey: is ${privateKey}`);                   //remove this line
-
-  if (alreadyClaimedToday) {
-    console.log(`${formattedTimestamp}: The timestamp of ethData.lastClaim corresponds to the current day: already claimed today.`);
-  } else {
-    console.log(`${formattedTimestamp}: The timestamp of ethData.lastClaim does not correspond to the current day: has not claimed today.`);
-  }
+  console.log(`${formattedTimestamp}: ethData.lastClaim is ', ${ethData?.lastClaim} and lastClaimDate is ${lastClaimDate}`); 
   /***************** Debug logs ***********/
-
 
   // Conditionally render a claim button or a text based on the amount to claim (and the lastClaim) 
   let claimContent;
   const amountToClaimInWei: BigNumberish = ethData?.establishedAmounts[dayOfTheMonth - 1] ?? 0;
   if (alreadyClaimedToday) {
     claimContent = <p>You already claimed today :) Come back soon...</p>;
-    console.log('The timestamp of lastClaim corresponds to the current day: already claimed today.');
+    console.log(`${formattedTimestamp}: The timestamp of ethData.lastClaim corresponds to the current day: already claimed today.`);
   } else {
-    console.log('The timestamp of lastClaim does not correspond to the current day: has not claimed today.');
+    console.log(`${formattedTimestamp}: The timestamp of ethData.lastClaim does not correspond to the current day: has not claimed today.`);
     if (amountToClaimInWei > 0) {
       claimContent = (
         <button className="claim-button" onClick={() => handleClaimClick()}>
@@ -150,19 +141,20 @@ function App() {
             </div>
             <div>
               <table className="tabledata">
-                <tr>
-                  <td className="cell-label">ePocket address:</td>
-                  <td className='cell-data'>{ePocketAddress}</td>
-                  </tr>
-                  <tr>
-                    <td className="cell-label">Transfering to:</td>
-                    <td className='cell-data'>{ethData?.owner}</td>
-                  </tr>
-                <tr>
-                  <td className="cell-label">Balance:</td>
-                  <td className='cell-data'>{formatEther(ethData?.balance ?? 0)} Eth</td>
-                  </tr>
-                  
+                  <tbody>
+                    <tr>
+                      <td className="cell-label">ePocket address:</td>
+                      <td className='cell-data'>{ePocketAddress}</td>
+                    </tr>
+                    <tr>
+                      <td className="cell-label">Transfering to:</td>
+                      <td className='cell-data'>{ethData?.owner}</td>
+                    </tr>
+                    <tr>
+                      <td className="cell-label">Balance:</td>
+                      <td className='cell-data'>{formatEther(ethData?.balance ?? 0)} Eth</td>
+                    </tr>
+                  </tbody>
               </table>
             </div>
           </>

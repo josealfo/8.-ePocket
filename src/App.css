@@ -4,12 +4,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* Vertically align to the top */
   align-items: center;
-  /* Horizontally center */
   min-height: 100vh;
   background-color: #fcfcfc;
-  /* Optional background color */
 }
 
 #root {

@@ -7,6 +7,6 @@ import envPlugin from 'vite-plugin-env';
 export default defineConfig({
   plugins: [
     react(),
-    envPlugin(), // Remove the parentheses to fix the error
+    /* envPlugin, */// Remove the parentheses to fix the error
   ],
 });

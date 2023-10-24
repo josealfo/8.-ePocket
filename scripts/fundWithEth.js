@@ -1,10 +1,11 @@
 const ethers = require('ethers');
 require('dotenv').config();
 
-
 /***************************
-  Script that ends 27 Eth to ePocket deployed locally
-
+  Script that sends 2 Eth to ePocket address
+    It will be easier to send money using a wallet like metamask.
+    (just input the contract address and send some ether or Test ether)
+    This script was done, in case the wallet is not working.
  ***************************/
 async function main() {
 
@@ -20,12 +21,12 @@ async function main() {
   let tx = {
     to: deployedToSepolia,
     // Convert currency unit from ether to wei
-    value: ethers.utils.parseEther('0.7')
+    value: ethers.utils.parseEther('2')
   }
   // Send a transaction
   await wallet.sendTransaction(tx)
   .then((txObj) => { 
-    console.log('Sent 0.7testEth to', deployedToSepolia);
+    console.log('Sent 2testEth to', deployedToSepolia);
     console.log('txHash', txObj.hash) 
   });
 }

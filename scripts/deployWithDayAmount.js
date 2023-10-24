@@ -1,6 +1,18 @@
 const ethers = require('ethers');
 require('dotenv').config();
 
+/* Script to deploy an ePocket Smart Contract with an array dayAmounts and no initial deposit.
+ * The owner will be the address who deployed. 
+ *
+ * We first create an arrayOfAmounts (in wei) that indicate the amount the owner can claim for a particular day. 0 indexed, so on 1st day of the month,
+ * the amount to claim will be arrayOFAmounts[0], for day 2 arrayOFAmounts[1] and so on until day 31 corresponding to arrayOfAmounts[30]. If a month has less than
+ * 31 days, e.g. February, still the array will be filled, even when that day will not be accesible (never will be feb 31 to claim that amount).
+ * 
+ * For testing purposes, the contract being deployed will be set up to clam 0.01 eth on day 1, 0.02 on day two and so on (0 if the day is a primer number, see code
+ * below)... Change these amounts according to your needs.
+ * 
+ * At the end, this script will display the array of amounts being registered, and the address where it was deployed to
+ */ 
 async function main() {
   const url = process.env.ALCHEMY_SEPOLIA_URL;
   const privateKey = process.env.APEX_PRIVATE_KEY;

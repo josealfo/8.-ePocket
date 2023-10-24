@@ -12,7 +12,7 @@ To install clone this repository, and get all dependencies by running `npm insta
 
 After running the command `npx run dev`, which will set up a Vite server; head your browser to `http://127.0.0.1:5173/`   (the localhost address to this server) 
 
-This will start a server configured to receive and send transactions to my personal ePocket. To receive payments to your wallet, you should deploy and configure a new contract by running the script: `scripts/deployWithDayAmounts.js` (specifying your wallet as the contract's owner and the amounts that you will claim for each day of the month). Then, fund your deployed ePocket with testEther, by sending ether to the smart contract address (using a wallet like Metamask), or by running this script if wallet is not available: `scripts/fundWithEth.js`
+This will start a server configured to receive and send transactions to my personal ePocket. To receive payments to your wallet, you should deploy and configure a new contract by running the script: `scripts/deployWithDayAmounts.js` (specifying your wallet as the contract's owner and the amounts that you will claim for each day of the month). Then, fund your deployed ePocket with testEther, by sending ether to the smart contract's address (using a wallet like Metamask), or by running this script if wallet is not available: `scripts/fundWithEth.js`
 
 Running the above script: `scripts/deployWithDayAmounts.js` will output the new contract's address. Place this address on `src/app.tsx` at line 15 like this:
 ```javascript 
